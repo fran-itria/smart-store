@@ -8,10 +8,10 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { decimalTransformer } from '../../common/transformers/decimal.transformer';
-import { Product } from './product.entity';
-import { ProductImage } from './product-image.entity';
-import { ProductComponent } from './product-component.entity';
-import { SkuVariantValue } from './sku-variant-value.entity';
+import { Product } from '../entities/product.entity';
+import { ProductImage } from '../product-image/entities/product-image.entity';
+import { ProductComponent } from '../product-component/entities/product-component.entity';
+import { SkuVariantValue } from '../entities/sku-variant-value.entity';
 
 /**
  * Unidad vendible. Es la entidad que viaja en la orden: contra el SKU se

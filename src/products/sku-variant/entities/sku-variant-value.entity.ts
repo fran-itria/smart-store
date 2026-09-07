@@ -1,7 +1,7 @@
 import { Entity, Index, JoinColumn, ManyToOne, Column } from 'typeorm';
-import { BaseEntity } from '../../common/entities/base.entity';
-import { Sku } from './sku.entity';
-import { Variant } from './variant.entity';
+import { BaseEntity } from '../../../common/entities/base.entity';
+import { Variant } from '../../variant/entities/variant.entity';
+import { Sku } from '../../sku/entities/sku.entity';
 
 /**
  * Tabla intermedia SKU <-> Variant.

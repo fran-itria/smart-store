@@ -1,6 +1,6 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../common/entities/base.entity';
-import { SkuVariantValue } from './sku-variant-value.entity';
+import { BaseEntity } from '../../../common/entities/base.entity';
+import { SkuVariantValue } from '../../sku-variant/entities/sku-variant-value.entity';
 
 /**
  * Un par atributo/valor del catálogo: `name` es la dimensión ("Talle",

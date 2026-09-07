@@ -6,11 +6,13 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { databaseImports } from './config/database';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ProductsModule } from './products/products.module';
 
 const domainModules =
   process.env.NODE_ENV === 'test' ? [] : [
     AuthModule,
-    UsersModule
+    UsersModule,
+    ProductsModule
   ];
 @Module({
   imports: [

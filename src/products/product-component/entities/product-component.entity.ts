@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
-import { Sku } from '../../sku/sku.entity';
+import { Sku } from '../../sku/entities/sku.entity';
 
 export enum ComponentSelectionMode {
   /** Va siempre en el combo, el cliente no lo elige ni lo puede sacar. */

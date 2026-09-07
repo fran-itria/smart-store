@@ -1,4 +1,10 @@
+import { decimalTransformer } from 'src/common/transformers/decimal.transformer';
+import { Product } from 'src/products/entities/product.entity';
+import { ProductComponent } from 'src/products/product-component/entities/product-component.entity';
+import { ProductImage } from 'src/products/product-image/entities/product-image.entity';
+import { SkuVariantValue } from 'src/products/sku-variant/entities/sku-variant-value.entity';
 import {
+  BaseEntity,
   Column,
   Entity,
   Index,
@@ -6,12 +12,6 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { BaseEntity } from '../../common/entities/base.entity';
-import { decimalTransformer } from '../../common/transformers/decimal.transformer';
-import { Product } from '../entities/product.entity';
-import { ProductImage } from '../product-image/entities/product-image.entity';
-import { ProductComponent } from '../product-component/entities/product-component.entity';
-import { SkuVariantValue } from '../entities/sku-variant-value.entity';
 
 /**
  * Unidad vendible. Es la entidad que viaja en la orden: contra el SKU se

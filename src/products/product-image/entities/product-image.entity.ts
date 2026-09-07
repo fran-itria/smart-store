@@ -1,7 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { Product } from '../../entities/product.entity';
-import { Sku } from '../../sku/sku.entity';
+import { Sku } from '../../sku/entities/sku.entity';
 
 /**
  * Imagen del catálogo.

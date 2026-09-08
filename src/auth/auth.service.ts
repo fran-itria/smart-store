@@ -33,7 +33,7 @@ export class AuthService {
 
     const user = await this.usersService.create({
       ...dto,
-      user: dto.name + "_" + dto.surname,
+      user: dto.name + '_' + dto.surname,
       password: await bcrypt.hash(dto.password, SALT_ROUNDS),
     });
 

@@ -11,7 +11,7 @@ export class VariantService {
   constructor(
     @InjectRepository(Variant)
     private readonly variantRepository: Repository<Variant>,
-  ) { }
+  ) {}
 
   private repo(manager?: EntityManager) {
     return manager ? manager.getRepository(Variant) : this.variantRepository;

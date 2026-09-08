@@ -19,7 +19,7 @@ export class User extends BaseEntity {
   surname!: string;
 
   @Column({ type: 'varchar', length: 20 })
-  user!: string
+  user!: string;
 
   @Column({ type: 'varchar', length: 255, select: false })
   password!: string;

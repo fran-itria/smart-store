@@ -8,7 +8,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-  ) { }
+  ) {}
 
   findById(id: string): Promise<User | null> {
     return this.usersRepository.findOne({ where: { id } });
@@ -37,11 +37,16 @@ export class UsersService {
   }
 
   async findAllUsers(): Promise<User[]> {
-    const users = await this.usersRepository.find()
-    return users
+    const users = await this.usersRepository.find();
+    return users;
   }
 
-  create(data: Pick<User, 'email' | 'name' | 'password' | 'surname' | 'user' | 'phone'>): Promise<User> {
+  create(
+    data: Pick<
+      User,
+      'email' | 'name' | 'password' | 'surname' | 'user' | 'phone'
+    >,
+  ): Promise<User> {
     const user = this.usersRepository.create(data);
     return this.usersRepository.save(user);
   }

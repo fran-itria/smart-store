@@ -8,15 +8,17 @@ import {
   SkuVariantValue,
   Variant,
 } from './entities';
+import { ProductsController } from './products.controller';
+import { ProductService } from './products.service';
+import { VariantModule } from './variant/variant.module';
+import { SkuModule } from './sku/sku.module';
+import { SkuVariantModule } from './sku-variant/sku-variant.module';
 
-/**
- * Catálogo: Product -> Sku -> (variantes, imágenes, componentes).
- * Por ahora sólo registra las entidades; los repositorios quedan disponibles
- * para inyectar y se exporta TypeOrmModule para que otros módulos (órdenes,
- * stock) los usen sin volver a declararlos.
- */
 @Module({
   imports: [
+    VariantModule,
+    SkuModule,
+    SkuVariantModule,
     TypeOrmModule.forFeature([
       Product,
       Sku,
@@ -26,6 +28,8 @@ import {
       ProductComponent,
     ]),
   ],
-  exports: [TypeOrmModule],
+  providers: [ProductService],
+  controllers: [ProductsController],
+  exports: [TypeOrmModule, ProductService],
 })
-export class ProductsModule {}
+export class ProductsModule { }

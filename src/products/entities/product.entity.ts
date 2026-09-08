@@ -1,6 +1,6 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { Sku } from '../sku/sku.entity';
+import { Sku } from '../sku/entities/sku.entity';
 import { ProductImage } from '../product-image/entities/product-image.entity';
 
 export enum ProductType {

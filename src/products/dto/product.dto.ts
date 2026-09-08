@@ -57,7 +57,6 @@ export class VariantCombinationDto {
   code?: string;
 }
 
-
 export class ProductDto {
   @IsString()
   @Length(2, 200)

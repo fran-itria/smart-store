@@ -4,7 +4,6 @@ import { ProductComponent } from 'src/products/product-component/entities/produc
 import { ProductImage } from 'src/products/product-image/entities/product-image.entity';
 import { SkuVariantValue } from 'src/products/sku-variant/entities/sku-variant-value.entity';
 import {
-  BaseEntity,
   Column,
   Entity,
   Index,
@@ -12,6 +11,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { BaseEntity } from '../../../common/entities/base.entity';
 
 /**
  * Unidad vendible. Es la entidad que viaja en la orden: contra el SKU se

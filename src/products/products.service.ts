@@ -156,4 +156,48 @@ export class ProductService {
     if (!product) throw new NotFoundException(`No existe el producto ${id}`);
     return product;
   }
+
+  /**
+   * Listado de catálogo.
+   *
+   * `select` recorta las columnas nivel por nivel: sin él la grilla se trae
+   * descripciones, timestamps y el árbol de componentes de cada combo.
+   *
+   * Dos reglas al usarlo:
+   *  - la relación se sigue declarando en `relations`; el `select` anidado
+   *    sólo dice qué columnas traer de ella, no la carga
+   *  - conviene dejar el `id` en cada nivel: es con lo que TypeORM arma el
+   *    árbol al hidratar
+   */
+  async findAll(): Promise<Product[]> {
+    const products = await this.productRepository.find({
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        isPublished: true,
+        images: { id: true, url: true, position: true },
+        skus: {
+          id: true,
+          code: true,
+          price: true,
+          discountedPrice: true,
+          stock: true,
+          variantValues: {
+            id: true,
+            variant: { id: true, name: true, value: true },
+          },
+        },
+      },
+      relations: {
+        images: true,
+        skus: { variantValues: { variant: true } },
+      },
+      order: { name: 'ASC', images: { position: 'ASC' } },
+    });
+    if (!products.length) {
+      throw new NotFoundException(`No hay productos registrados`);
+    }
+    return products;
+  }
 }

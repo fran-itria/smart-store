@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -7,6 +7,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
@@ -17,6 +18,7 @@ import { ProductDto } from './dto/product.dto';
 import { productExamples } from './dto/product.examples';
 import { Product } from './entities';
 import { BEARER_AUTH } from '../config/swagger';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('products')
 @ApiBearerAuth(BEARER_AUTH)
@@ -64,5 +66,15 @@ export class ProductsController {
   @ApiConflictResponse({ description: 'El `code` de un SKU ya está en uso.' })
   async create(@Body() body: ProductDto) {
     return this.productService.create(body);
+  }
+
+  /** Listado de catálogo: sin descripciones, timestamps ni componentes. */
+  @Public()
+  @Get()
+  @ApiOperation({ summary: 'Listar productos' })
+  @ApiOkResponse({ description: 'Productos con sus SKUs y variantes.' })
+  @ApiNotFoundResponse({ description: 'No hay productos registrados.' })
+  async getAllProducts() {
+    return this.productService.findAll();
   }
 }

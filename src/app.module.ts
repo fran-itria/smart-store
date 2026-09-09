@@ -9,11 +9,9 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 
 const domainModules =
-  process.env.NODE_ENV === 'test' ? [] : [
-    AuthModule,
-    UsersModule,
-    ProductsModule
-  ];
+  process.env.NODE_ENV === 'test'
+    ? []
+    : [AuthModule, UsersModule, ProductsModule];
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -24,4 +22,4 @@ const domainModules =
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

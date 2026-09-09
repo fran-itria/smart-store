@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { setupSwagger } from './config/swagger';
 
 try {
   process.loadEnvFile();
@@ -18,7 +19,12 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log('Correindo en puerto:', process.env.PORT);
+  const port = process.env.PORT ?? 3000;
+  const docsUrl =
+    process.env.SWAGGER_ENABLED === 'false' ? null : setupSwagger(app, port);
+
+  await app.listen(port);
+  console.log('Corriendo en puerto:', port);
+  if (docsUrl) console.log('Documentación en:', docsUrl);
 }
 bootstrap();

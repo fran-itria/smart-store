@@ -39,6 +39,7 @@ src/
   app.service.ts       getHello()
   config/
     database.ts        exporta databaseImports: TypeOrmModule.forRootAsync configurado por ConfigService
+    swagger.ts         setupSwagger(): monta Swagger UI en /docs y el JSON en /docs/json
 ```
 
 Puntos de extensión que ya existen y hay que usar al agregar features:
@@ -66,6 +67,7 @@ Puntos de extensión que ya existen y hay que usar al agregar features:
 | `DB_PASSWORD` | `postgres` | password |
 | `DB_DATABASE` | `smart_store` | nombre de la base |
 | `DB_SYNCHRONIZE` | `true` | string, se compara contra `'true'` |
+| `SWAGGER_ENABLED` | (vacío) | `'false'` apaga la doc en `/docs` |
 
 `NODE_ENV=test` desactiva TypeORM y los módulos de dominio (ver arriba).
 

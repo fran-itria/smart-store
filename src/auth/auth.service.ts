@@ -23,7 +23,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) { }
+  ) {}
 
   async register(dto: RegisterDto): Promise<AuthResponse> {
     const existing = await this.usersService.findByEmail(dto.email);
@@ -45,7 +45,8 @@ export class AuthService {
 
     // Mismo mensaje para email inexistente y password incorrecta: no filtramos
     // qué emails están registrados.
-    const passwordOk = user && (await bcrypt.compare(dto.password, user.password));
+    const passwordOk =
+      user && (await bcrypt.compare(dto.password, user.password));
 
     if (!user || !passwordOk) {
       throw new UnauthorizedException('Credenciales inválidas');

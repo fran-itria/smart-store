@@ -28,3 +28,32 @@ export class ProductComponentDto {
   @IsBoolean()
   stockReduce?: boolean;
 }
+
+/**
+ * Un componente declarado dentro del alta del combo (`POST /products`).
+ *
+ * No lleva `parentSkuId`: el SKU padre todavía no existe cuando se manda el
+ * payload, lo resuelve el alta después de crearlo.
+ */
+export class BundleComponentDto {
+  /** SKU ya existente que entra en el combo. Es el que fija la variante:
+   *  si mandás el SKU del joystick rojo, el combo viene con el rojo. */
+  @IsUUID('4')
+  skuId!: string;
+
+  /** Unidades del componente por cada unidad del combo. Default 1. */
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  quantity?: number;
+
+  /** Hoy sólo `fixed`: ver `assertBundleIsValid`. */
+  @IsOptional()
+  @IsEnum(ComponentSelectionMode)
+  mode?: ComponentSelectionMode;
+
+  /** Si al vender el combo se descuenta stock de este componente. Default true. */
+  @IsOptional()
+  @IsBoolean()
+  stockReduce?: boolean;
+}

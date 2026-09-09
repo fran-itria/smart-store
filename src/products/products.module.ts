@@ -14,6 +14,7 @@ import { VariantModule } from './variant/variant.module';
 import { SkuModule } from './sku/sku.module';
 import { SkuVariantModule } from './sku-variant/sku-variant.module';
 import { ProductImageModule } from './product-image/product-image.module';
+import { ProductComponentModule } from './product-component/product-component.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ProductImageModule } from './product-image/product-image.module';
     SkuModule,
     SkuVariantModule,
     ProductImageModule,
+    ProductComponentModule,
     TypeOrmModule.forFeature([
       Product,
       Sku,

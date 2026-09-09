@@ -5,6 +5,7 @@ import { Variant } from '../variant/entities/variant.entity';
 import { VariantService } from '../variant/variant.service';
 import { SkuService } from '../sku/sku.service';
 import { SkuVariantService } from '../sku-variant/sku-variant.service';
+import { ProductComponentService } from '../product-component/product-component.service';
 import { ProductDto, VariantCombinationDto } from '../dto/product.dto';
 import { createSku } from './createSku';
 
@@ -13,6 +14,7 @@ export interface ProductWriteServices {
   variantService: VariantService;
   skuService: SkuService;
   skuVariantService: SkuVariantService;
+  productComponentService: ProductComponentService;
 }
 
 /**

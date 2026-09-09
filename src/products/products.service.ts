@@ -32,7 +32,7 @@ export class ProductService {
     private readonly productImageService: ProductImageService,
     private readonly productComponentService: ProductComponentService,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   /** Los services que las funciones de `./services` necesitan para escribir. */
   private get writeServices(): ProductWriteServices {
@@ -137,12 +137,47 @@ export class ProductService {
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        isPublished: true,
+        images: { id: true, url: true, position: true },
+        skus: {
+          id: true,
+          code: true,
+          price: true,
+          discountedPrice: true,
+          stock: true,
+          variantValues: {
+            id: true,
+            variant: { id: true, name: true, value: true },
+          },
+          components: {
+            id: true,
+            componentSku: {
+              id: true,
+              product: {
+                id: true,
+                name: true,
+              },
+              variantValues: {
+                id: true,
+                variant: {
+                  id: true,
+                  name: true,
+                  value: true
+                }
+              }
+            }
+          }
+        },
+      },
       relations: {
         images: true,
         skus: {
           variantValues: { variant: true },
           images: true,
-          // en un combo, qué trae adentro cada SKU vendible
           components: {
             componentSku: {
               product: true,
@@ -187,11 +222,37 @@ export class ProductService {
             id: true,
             variant: { id: true, name: true, value: true },
           },
+          components: {
+            id: true,
+            componentSku: {
+              id: true,
+              product: {
+                id: true,
+                name: true,
+              },
+              variantValues: {
+                id: true,
+                variant: {
+                  id: true,
+                  name: true,
+                  value: true
+                }
+              }
+            }
+          }
         },
       },
       relations: {
         images: true,
-        skus: { variantValues: { variant: true } },
+        skus: {
+          variantValues: { variant: true },
+          components: {
+            componentSku: {
+              product: true,
+              variantValues: { variant: true },
+            },
+          },
+        },
       },
       order: { name: 'ASC', images: { position: 'ASC' } },
     });

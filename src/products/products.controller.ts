@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -9,6 +9,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { ProductService } from './products.service';
@@ -24,7 +25,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 @ApiBearerAuth(BEARER_AUTH)
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   /**
    * Alta de un producto con todos sus SKUs.
@@ -76,5 +77,15 @@ export class ProductsController {
   @ApiNotFoundResponse({ description: 'No hay productos registrados.' })
   async getAllProducts() {
     return this.productService.findAll();
+  }
+
+  @Public()
+  @Get("/:id")
+  @ApiOperation({ summary: 'Listar productos' })
+  @ApiOkResponse({ description: 'Productos con sus SKUs y variantes.' })
+  @ApiNotFoundResponse({ description: 'No hay productos registrados.' })
+  @ApiQuery({ name: "id", type: "string" })
+  async getOneProduct(@Query("id") id: string) {
+    return this.productService.findOne(id);
   }
 }

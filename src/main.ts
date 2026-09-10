@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { setupCors } from './config/cors';
 import { setupSwagger } from './config/swagger';
 
 try {
@@ -9,6 +10,8 @@ try {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const corsOrigin = setupCors(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -26,5 +29,6 @@ async function bootstrap() {
   await app.listen(port);
   console.log('Corriendo en puerto:', port);
   if (docsUrl) console.log('Documentación en:', docsUrl);
+  console.log('CORS habilitado para:', corsOrigin);
 }
 bootstrap();

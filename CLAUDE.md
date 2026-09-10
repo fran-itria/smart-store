@@ -68,6 +68,7 @@ Puntos de extensión que ya existen y hay que usar al agregar features:
 | `DB_DATABASE` | `smart_store` | nombre de la base |
 | `DB_SYNCHRONIZE` | `true` | string, se compara contra `'true'` |
 | `SWAGGER_ENABLED` | (vacío) | `'false'` apaga la doc en `/docs` |
+| `CORS_ORIGINS` | (vacío) | dominios permitidos, separados por coma; vacío = `*` |
 
 `NODE_ENV=test` desactiva TypeORM y los módulos de dominio (ver arriba).
 

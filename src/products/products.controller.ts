@@ -25,7 +25,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 @ApiBearerAuth(BEARER_AUTH)
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   /**
    * Alta de un producto con todos sus SKUs.
@@ -80,12 +80,12 @@ export class ProductsController {
   }
 
   @Public()
-  @Get("/:id")
+  @Get('/:id')
   @ApiOperation({ summary: 'Listar productos' })
   @ApiOkResponse({ description: 'Productos con sus SKUs y variantes.' })
   @ApiNotFoundResponse({ description: 'No hay productos registrados.' })
-  @ApiQuery({ name: "id", type: "string" })
-  async getOneProduct(@Query("id") id: string) {
+  @ApiQuery({ name: 'id', type: 'string' })
+  async getOneProduct(@Query('id') id: string) {
     return this.productService.findOne(id);
   }
 }

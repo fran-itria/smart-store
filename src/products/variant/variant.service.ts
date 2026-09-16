@@ -11,7 +11,7 @@ export class VariantService {
   constructor(
     @InjectRepository(Variant)
     private readonly variantRepository: Repository<Variant>,
-  ) {}
+  ) { }
 
   private repo(manager?: EntityManager) {
     return manager ? manager.getRepository(Variant) : this.variantRepository;
@@ -28,7 +28,7 @@ export class VariantService {
     if (found) return found;
 
     try {
-      return await repo.save(repo.create({ name, value }));
+      return await repo.save(repo.create({ name: name.toLocaleLowerCase(), value: value.toLocaleLowerCase() }));
     } catch (error) {
       if (
         error instanceof QueryFailedError &&

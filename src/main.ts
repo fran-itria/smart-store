@@ -6,12 +6,12 @@ import { setupSwagger } from './config/swagger';
 
 try {
   process.loadEnvFile();
-} catch (error) {}
+} catch (error) { }
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const corsOrigin = setupCors(app);
+  setupCors(app);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -27,8 +27,6 @@ async function bootstrap() {
     process.env.SWAGGER_ENABLED === 'false' ? null : setupSwagger(app, port);
 
   await app.listen(port);
-  console.log('Corriendo en puerto:', port);
-  if (docsUrl) console.log('Documentación en:', docsUrl);
-  console.log('CORS habilitado para:', corsOrigin);
+  // if (docsUrl) console.log('Documentación en:', docsUrl);
 }
 bootstrap();

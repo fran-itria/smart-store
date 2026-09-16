@@ -5,6 +5,7 @@ export { assertCombinationsAreValid } from './assertCombinationsAreValid';
 export { assertBundleIsValid } from './assertBundleIsValid';
 export { bundleComponentsFor } from './bundleComponents';
 export { attachComponents } from './attachComponents';
+export { resolveCategories } from './resolveCategories';
 export { buildCode } from './buildCode';
 export { createSku } from './createSku';
 export {

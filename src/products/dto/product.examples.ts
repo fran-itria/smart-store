@@ -4,6 +4,11 @@
  * Los `skuId` de los combos son de mentira: reemplazalos por ids de SKUs que
  * existan en tu base (los devuelve el alta de cualquier producto simple o
  * variable, en `skus[].id`).
+ *
+ * Los `categoryIds` también: salen de `GET /categories`. Van al nivel del
+ * producto y no del SKU —las categorías son de la ficha de catálogo, no de
+ * cada combinación—, y son opcionales: si no tenés ninguna a mano, borrá la
+ * línea y el alta funciona igual.
  */
 export const productExamples = {
   simple: {
@@ -16,6 +21,7 @@ export const productExamples = {
       discountedPrice: 85000,
       stock: 40,
       isPublished: true,
+      categoryIds: ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'],
       images: ['https://cdn.example.com/joystick.jpg'],
     },
   },
@@ -23,11 +29,12 @@ export const productExamples = {
   variable: {
     summary: 'Variable — un SKU por combinación',
     description:
-      'Cada combinación puede pisar precio y stock; si no los manda, hereda los del producto.',
+      'Cada combinación puede pisar precio y stock; si no los manda, hereda los del producto. Las categorías no: son del producto entero, todas sus combinaciones caen en las mismas.',
     value: {
       name: 'Joystick inalámbrico',
       price: 95000,
       stock: 0,
+      categoryIds: ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'],
       variants: [
         {
           variant: [{ name: 'Color', value: 'Rojo' }],
@@ -51,6 +58,10 @@ export const productExamples = {
       description: 'Consola con dos joysticks rojos.',
       price: 850000,
       isPublished: true,
+      categoryIds: [
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+      ],
       components: [
         { skuId: '11111111-1111-4111-8111-111111111111', quantity: 1 },
         { skuId: '22222222-2222-4222-8222-222222222222', quantity: 2 },
@@ -66,6 +77,10 @@ export const productExamples = {
       name: 'Combo Consola + 2 Joysticks',
       price: 850000,
       isPublished: true,
+      categoryIds: [
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+      ],
       components: [
         { skuId: '11111111-1111-4111-8111-111111111111', quantity: 1 },
       ],

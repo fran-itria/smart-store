@@ -19,6 +19,7 @@ import {
   ProductWriteServices,
   resolveType,
   assertPriceIsValid,
+  resolveCategories,
 } from './services';
 
 @Injectable()
@@ -47,7 +48,8 @@ export class ProductService {
   /**
    * Alta de un producto con todos sus SKUs.
    *   0. validar (fuera de la transacción: si el payload está mal, ni se abre)
-   *   1. crear el Product     -> ficha de catálogo, sin precio ni stock
+   *   1. crear el Product     -> ficha de catálogo, sin precio ni stock,
+   *                              atado a las categorías que vinieron por id
    *   2. crear las imágenes   -> cuelgan del producto
    *   3. un SKU por combinación, y atarle sus variantes
    *   3.bis si es un combo, atarle además los SKUs que lo integran
@@ -61,13 +63,15 @@ export class ProductService {
     if (type === ProductType.BUNDLE) assertBundleIsValid(body);
 
     const productId = await this.dataSource.transaction(async (manager) => {
-      // PASO 1: el producto
+      // PASO 1: el producto, con sus categorías
+      const categories = await resolveCategories(body.categoryIds, manager);
       const product = await manager.save(
         manager.create(Product, {
           name: body.name,
           description: body.description ?? null,
           type,
           isPublished: body.isPublished ?? false,
+          categories,
         }),
       );
 
@@ -142,6 +146,7 @@ export class ProductService {
         name: true,
         type: true,
         isPublished: true,
+        categories: { id: true, name: true },
         images: { id: true, url: true, position: true },
         skus: {
           id: true,
@@ -174,6 +179,7 @@ export class ProductService {
         },
       },
       relations: {
+        categories: true,
         images: true,
         skus: {
           variantValues: { variant: true },
@@ -211,6 +217,7 @@ export class ProductService {
         name: true,
         type: true,
         isPublished: true,
+        categories: { id: true, name: true },
         images: { id: true, url: true, position: true },
         skus: {
           id: true,
@@ -243,6 +250,7 @@ export class ProductService {
         },
       },
       relations: {
+        categories: true,
         images: true,
         skus: {
           variantValues: { variant: true },

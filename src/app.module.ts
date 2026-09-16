@@ -7,11 +7,12 @@ import { databaseImports } from './config/database';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
 
 const domainModules =
   process.env.NODE_ENV === 'test'
     ? []
-    : [AuthModule, UsersModule, ProductsModule];
+    : [AuthModule, UsersModule, ProductsModule, CategoriesModule];
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -22,4 +23,4 @@ const domainModules =
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

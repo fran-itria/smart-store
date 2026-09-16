@@ -10,6 +10,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Length,
   MaxLength,
   Min,
@@ -89,6 +90,15 @@ export class ProductDto {
   @IsOptional()
   @IsBoolean()
   isPublished?: boolean;
+
+  /**
+   * Categorías a las que pertenece el producto, por id. Tienen que existir
+   * (`GET /categories` las lista); si mandás una que no, el alta falla entera.
+   */
+  @IsOptional()
+  @IsArray()
+  @IsUUID('4', { each: true, message: 'Id de categoría inválido' })
+  categoryIds?: string[];
 
   @IsOptional()
   @IsArray()

@@ -1,7 +1,8 @@
-import { Column, Entity, Index, OneToMany } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Sku } from '../sku/entities/sku.entity';
 import { ProductImage } from '../product-image/entities/product-image.entity';
+import { Category } from 'src/categories/entities/category.entity';
 
 export enum ProductType {
   /** Producto sin variantes: tiene un único SKU. */
@@ -39,4 +40,14 @@ export class Product extends BaseEntity {
     cascade: ['insert'],
   })
   images!: ProductImage[];
+
+  @ManyToMany(() => Category, (category) => category.products, {
+    cascade: false,
+  })
+  @JoinTable({
+    name: 'product_categories',
+    joinColumn: { name: 'productId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'categoryId', referencedColumnName: 'id' },
+  })
+  categories!: Category[];
 }

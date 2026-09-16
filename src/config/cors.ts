@@ -1,11 +1,26 @@
 import { INestApplication } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
+/**
+ * Normaliza la lista de `CORS_ORIGINS`.
+ *
+ * El navegador manda el header `Origin` como `esquema://host[:puerto]`, sin
+ * path ni barra final. Por eso acá se saca la barra y se descartan las
+ * entradas sin esquema: nunca podrían matchear, y si se dejan pasan como
+ * entradas muertas que hacen parecer que CORS "no anda".
+ */
 function parseOrigins(raw?: string): string[] {
-  return (raw ?? '')
+  const entries = (raw ?? '')
     .split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
     .filter(Boolean);
+
+  const [valid, invalid] = [
+    entries.filter((origin) => /^https?:\/\/.+/.test(origin)),
+    entries.filter((origin) => !/^https?:\/\/.+/.test(origin)),
+  ];
+
+  return valid;
 }
 
 export function buildCorsOptions(raw = process.env.CORS_ORIGINS): CorsOptions {
@@ -25,6 +40,7 @@ export function buildCorsOptions(raw = process.env.CORS_ORIGINS): CorsOptions {
  */
 export function setupCors(app: INestApplication) {
   const options = buildCorsOptions();
+  const origins = options.origin as string[];
   app.enableCors(options);
-  return options.origin;
+  return origins;
 }

@@ -28,5 +28,6 @@ async function bootstrap() {
 
   await app.listen(port);
   // if (docsUrl) console.log('Documentación en:', docsUrl);
+  // console.log('Aplicación escuchando en puerto:', port);
 }
 bootstrap();

@@ -33,7 +33,7 @@ export class ProductService {
     private readonly productImageService: ProductImageService,
     private readonly productComponentService: ProductComponentService,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   /** Los services que las funciones de `./services` necesitan para escribir. */
   private get writeServices(): ProductWriteServices {
@@ -148,6 +148,7 @@ export class ProductService {
         isPublished: true,
         categories: { id: true, name: true },
         images: { id: true, url: true, position: true },
+        description: true,
         skus: {
           id: true,
           code: true,

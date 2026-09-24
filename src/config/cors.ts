@@ -27,7 +27,7 @@ export function buildCorsOptions(raw = process.env.CORS_ORIGINS): CorsOptions {
   const origins = parseOrigins(raw);
 
   return {
-    origin: origins,
+    origin: "*",
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: false,

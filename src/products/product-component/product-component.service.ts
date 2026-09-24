@@ -45,6 +45,14 @@ export class ProductComponentService {
     return repo.save(rows);
   }
 
+  /** Vacía el contenido de un combo (para volver a atarle componentes). */
+  async unlinkByParent(
+    parentSkuId: string,
+    manager?: EntityManager,
+  ): Promise<void> {
+    await this.repo(manager).delete({ parentSkuId });
+  }
+
   /** Qué compone a un SKU, con el SKU componente ya cargado. */
   async findByParent(
     parentSkuId: string,

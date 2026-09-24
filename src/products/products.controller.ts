@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -16,7 +25,8 @@ import { ProductService } from './products.service';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
 import { ProductDto } from './dto/product.dto';
-import { productExamples } from './dto/product.examples';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { productExamples, productUpdateExamples } from './dto/product.examples';
 import { Product } from './entities';
 import { BEARER_AUTH } from '../config/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -87,5 +97,50 @@ export class ProductsController {
   @ApiQuery({ name: 'id', type: 'string' })
   async getOneProduct(@Param('id') id: string) {
     return this.productService.findOne(id);
+  }
+
+  @Put(':id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({
+    summary: 'Editar un producto entero',
+    description: [
+      'Mismo payload que el alta: describe cómo queda el producto completo.',
+      '',
+      '**SKUs:** `variants` es la lista entera. Cada combinación se empareja',
+      'con el SKU que ya tenía esas opciones (o con el de `skuId`, si lo',
+      'mandás para cambiarle las opciones sin perderlo); las nuevas se crean',
+      'y los SKUs que no aparecen se dan de baja. Si el SKU que querés sacar',
+      'está dentro de otro combo, responde 409.',
+      '',
+      '**Lo que no mandás queda como está:** `description`, `isPublished`,',
+      '`categoryIds`, `images`, y en cada SKU `stock`, `code` y',
+      '`discountedPrice`. `null` borra `description` / `discountedPrice`;',
+      '`[]` vacía `categoryIds` / `images`.',
+      '',
+      '**Combos:** `components` también es la lista entera; el contenido de',
+      'cada SKU se rehace y su stock se recalcula.',
+    ].join('\n'),
+  })
+  @ApiBody({ type: UpdateProductDto, examples: productUpdateExamples })
+  @ApiOkResponse({
+    description: 'El producto actualizado, con el mismo árbol que el alta.',
+    type: Product,
+  })
+  @ApiBadRequestResponse({
+    description: 'Payload inválido o incoherente (ver el mensaje del error).',
+  })
+  @ApiForbiddenResponse({ description: 'Hace falta rol admin.' })
+  @ApiNotFoundResponse({
+    description: 'No existe el producto, una categoría o un SKU componente.',
+  })
+  @ApiConflictResponse({
+    description:
+      'Un `code` ya está en uso, o se quiere quitar un SKU que usa otro combo.',
+  })
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: UpdateProductDto,
+  ) {
+    return this.productService.update(id, body);
   }
 }

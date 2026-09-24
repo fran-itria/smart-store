@@ -1,13 +1,13 @@
 import { EntityManager } from 'typeorm';
 import { Product } from '../entities/product.entity';
 import { Sku } from '../sku/entities/sku.entity';
-import { Variant } from '../variant/entities/variant.entity';
 import { VariantService } from '../variant/variant.service';
 import { SkuService } from '../sku/sku.service';
 import { SkuVariantService } from '../sku-variant/sku-variant.service';
 import { ProductComponentService } from '../product-component/product-component.service';
 import { ProductDto, VariantCombinationDto } from '../dto/product.dto';
 import { createSku } from './createSku';
+import { resolveVariants } from './resolveVariants';
 
 /** Los services que necesita el alta para escribir el árbol de un producto. */
 export interface ProductWriteServices {
@@ -28,16 +28,11 @@ export async function createSkuForCombination(
   services: ProductWriteServices,
 ): Promise<Sku> {
   // 3.a — Resolver cada opción a una fila de `variants`.
-  const variants: Variant[] = [];
-  for (const option of combination.variant) {
-    variants.push(
-      await services.variantService.findOneOrCreate(
-        option.name.trim(),
-        option.value.trim(),
-        manager,
-      ),
-    );
-  }
+  const variants = await resolveVariants(
+    combination.variant,
+    services.variantService,
+    manager,
+  );
 
   // 3.b — Crear el SKU. Es la unidad vendible: acá van precio y stock.
   const sku = await createSku(

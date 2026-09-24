@@ -7,3 +7,7 @@ export {
   BundleComponentDto,
   ProductComponentDto,
 } from '../product-component/dto/product-component.dto';
+export {
+  UpdateProductDto,
+  UpdateVariantCombinationDto,
+} from './update-product.dto';

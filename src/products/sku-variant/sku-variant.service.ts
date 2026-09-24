@@ -34,6 +34,11 @@ export class SkuVariantService {
     return repo.save(rows);
   }
 
+  /** Suelta todas las variantes de un SKU (para volver a atarlo con otras). */
+  async unlinkBySku(skuId: string, manager?: EntityManager): Promise<void> {
+    await this.repo(manager).delete({ skuId });
+  }
+
   /** Las variantes de un SKU, con la variante ya cargada. */
   async findBySku(
     skuId: string,

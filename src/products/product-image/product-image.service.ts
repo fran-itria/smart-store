@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, IsNull, Repository } from 'typeorm';
 import { ProductImage } from '../entities';
 
 @Injectable()
@@ -26,5 +26,18 @@ export class ProductImageService {
     await repo.save(
       urls.map((url, position) => repo.create({ productId, url, position })),
     );
+  }
+
+  /**
+   * Reemplaza las imágenes generales del producto por `urls`, en ese orden.
+   * Las de un SKU puntual (`skuId` seteado) no se tocan.
+   */
+  async replaceImages(
+    productId: string,
+    urls: string[],
+    manager?: EntityManager,
+  ) {
+    await this.repo(manager).delete({ productId, skuId: IsNull() });
+    await this.saveImages(productId, urls, manager);
   }
 }

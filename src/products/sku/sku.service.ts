@@ -38,6 +38,24 @@ export class SkuService {
     });
   }
 
+  /** Pisa los campos de un SKU existente. */
+  async update(
+    id: string,
+    changes: Partial<Pick<Sku, 'code' | 'price' | 'discountedPrice' | 'stock'>>,
+    manager?: EntityManager,
+  ): Promise<void> {
+    await this.repo(manager).update(id, changes);
+  }
+
+  /**
+   * Baja lógica: el SKU deja de verse y libera su `code`, pero la fila queda
+   * para lo que ya lo referencia (órdenes).
+   */
+  async softDelete(ids: string[], manager?: EntityManager): Promise<void> {
+    if (!ids.length) return;
+    await this.repo(manager).softDelete({ id: In(ids) });
+  }
+
   /** Pisa el stock de un SKU. En los bundles se calcula desde los componentes. */
   async setStock(
     id: string,

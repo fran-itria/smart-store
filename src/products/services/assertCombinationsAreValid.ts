@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { VariantCombinationDto } from '../dto/product.dto';
+import { variantKey } from './variantKey';
 
 /**
  * Tres reglas que mantienen el catálogo usable desde el front:
@@ -33,12 +34,7 @@ export function assertCombinationsAreValid(
       );
     }
 
-    const key = variant
-      .map(
-        (o) => `${o.name.trim().toLowerCase()}=${o.value.trim().toLowerCase()}`,
-      )
-      .sort()
-      .join('|');
+    const key = variantKey(variant);
     if (seen.has(key)) {
       throw new BadRequestException(`Combinación duplicada: ${key}`);
     }

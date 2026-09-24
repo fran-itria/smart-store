@@ -11,7 +11,7 @@ export class VariantService {
   constructor(
     @InjectRepository(Variant)
     private readonly variantRepository: Repository<Variant>,
-  ) { }
+  ) {}
 
   private repo(manager?: EntityManager) {
     return manager ? manager.getRepository(Variant) : this.variantRepository;
@@ -23,12 +23,16 @@ export class VariantService {
     manager?: EntityManager,
   ): Promise<Variant> {
     const repo = this.repo(manager);
+    // Se guardan en minúscula: hay que buscar igual, o "Color" no encuentra
+    // a "color" y el insert choca contra el único.
+    name = name.toLocaleLowerCase();
+    value = value.toLocaleLowerCase();
 
     const found = await repo.findOne({ where: { name, value } });
     if (found) return found;
 
     try {
-      return await repo.save(repo.create({ name: name.toLocaleLowerCase(), value: value.toLocaleLowerCase() }));
+      return await repo.save(repo.create({ name, value }));
     } catch (error) {
       if (
         error instanceof QueryFailedError &&

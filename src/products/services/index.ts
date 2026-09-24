@@ -12,3 +12,7 @@ export {
   createSkuForCombination,
   type ProductWriteServices,
 } from './createSkuForCombination';
+export { variantKey } from './variantKey';
+export { resolveVariants } from './resolveVariants';
+export { assertSkusAreFree } from './assertSkusAreFree';
+export { updateSku } from './updateSku';

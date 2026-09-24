@@ -102,3 +102,52 @@ export const productExamples = {
     },
   },
 };
+
+/** Payloads para `PUT /products/:id`. Los ids son de mentira, como arriba. */
+export const productUpdateExamples = {
+  variable: {
+    summary: 'Variable — renombrar, sumar y quitar combinaciones',
+    description:
+      '"Rojo" pasa a "Bordó" sin perder su SKU (por eso va el `skuId`), "Azul" se empareja solo por sus opciones y le cambia el precio, "Verde" es nueva y se crea. Cualquier otro SKU que tuviera el producto se da de baja. Como no va `images`, las imágenes quedan como estaban; el stock de los SKUs que no lo mandan, también.',
+    value: {
+      name: 'Joystick inalámbrico',
+      price: 95000,
+      isPublished: true,
+      categoryIds: ['aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'],
+      variants: [
+        {
+          skuId: '44444444-4444-4444-8444-444444444444',
+          variant: [{ name: 'Color', value: 'Bordó' }],
+        },
+        {
+          variant: [{ name: 'Color', value: 'Azul' }],
+          price: 99000,
+          discountedPrice: null,
+        },
+        {
+          variant: [{ name: 'Color', value: 'Verde' }],
+          stock: 10,
+        },
+      ],
+    },
+  },
+  simple: {
+    summary: 'Simple — cambiar precio, imágenes y categorías',
+    description:
+      'Las imágenes se reemplazan por estas, en este orden. El stock no se toca porque no va.',
+    value: {
+      name: 'Joystick inalámbrico',
+      description: 'Control inalámbrico con vibración y batería de 20 h.',
+      price: 99000,
+      discountedPrice: 89000,
+      categoryIds: [
+        'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+      ],
+      images: [
+        'https://cdn.example.com/joystick-frente.jpg',
+        'https://cdn.example.com/joystick.jpg',
+      ],
+    },
+  },
+};

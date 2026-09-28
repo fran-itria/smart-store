@@ -12,6 +12,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity';
+import { OrderItem } from 'src/orderItem/entities/order-item.entity';
 
 /**
  * Unidad vendible. Es la entidad que viaja en la orden: contra el SKU se
@@ -81,4 +82,7 @@ export class Sku extends BaseEntity {
   /** Combos que incluyen a este SKU como parte. */
   @OneToMany(() => ProductComponent, (component) => component.componentSku)
   partOf!: ProductComponent[];
+
+  @OneToMany(() => OrderItem, (item) => item.sku)
+  items!: OrderItem[]
 }

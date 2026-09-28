@@ -8,11 +8,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
+import { OrdersModule } from './order/order.module';
 
 const domainModules =
   process.env.NODE_ENV === 'test'
     ? []
-    : [AuthModule, UsersModule, ProductsModule, CategoriesModule];
+    : [AuthModule, UsersModule, ProductsModule, CategoriesModule, OrdersModule];
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

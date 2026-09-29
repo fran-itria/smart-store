@@ -6,12 +6,15 @@ import { SkuModule } from "src/products/sku/sku.module";
 import { OrderService } from "./orders.service";
 import { OrderController } from "./orders.controller";
 import { Orders } from "./entities/order.entity";
+import { InstallmentService } from "src/installment/installment.service";
+import { InstallmentModule } from "src/installment/installment.module";
 
 
 
 @Module({
     imports: [
         SkuModule,
+        InstallmentModule,
         TypeOrmModule.forFeature([
             Sku,
             Orders,

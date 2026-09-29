@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './order/order.module';
+import { InstallmentModule } from './installment/installment.module';
 
 const domainModules =
   process.env.NODE_ENV === 'test'
@@ -20,6 +21,7 @@ const domainModules =
     ScheduleModule.forRoot(),
     ...databaseImports,
     ...domainModules,
+    InstallmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

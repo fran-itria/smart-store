@@ -82,6 +82,7 @@ export class OrderService {
             },
             select: {
                 id: true,
+                orderNumber: true,
                 client_name: true,
                 client_surname: true,
                 currency: true,
@@ -109,6 +110,10 @@ export class OrderService {
                         }
                     }
                 }
+            },
+            order: {
+                orderNumber: "DESC",
+                installments: { installment_number: "ASC" }
             }
         })
         if (!orders.length)
@@ -123,6 +128,9 @@ export class OrderService {
                 items: { sku: { product: true } },
                 installments: true
             },
+            order: {
+                installments: { installment_number: "ASC" }
+            }
         })
         if (!order)
             throw new NotFoundException("No se encontró la orden")

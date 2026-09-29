@@ -7,6 +7,9 @@ import { Installment } from "src/installment/entities/installment.entity";
 
 @Entity("orders")
 export class Orders extends BaseEntity {
+    @Column({ type: 'integer', generated: 'increment', unique: true })
+    orderNumber!: number;
+
     @Column({ type: 'varchar', nullable: false })
     client_name!: string
 

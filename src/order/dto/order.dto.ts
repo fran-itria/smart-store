@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsInt, IsOptional, IsString, IsUUID, Min, ValidateNested } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsEmail, IsEnum, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min, ValidateNested } from "class-validator";
 import { Currency, Delivered_method } from "../types/enum";
 
 
@@ -39,4 +39,9 @@ export class OrderDto {
     @ValidateNested({ each: true })
     @Type(() => OrderItemDto)
     order_items!: OrderItemDto[]
+
+    @IsInt()
+    @Min(1)
+    @IsOptional()
+    installments?: number
 }

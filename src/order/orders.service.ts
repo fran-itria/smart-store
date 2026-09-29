@@ -78,6 +78,7 @@ export class OrderService {
         const orders = await this.ordersRepository.find({
             relations: {
                 items: { sku: { product: true } },
+                installments: true
             },
             select: {
                 id: true,
@@ -120,6 +121,7 @@ export class OrderService {
             where: { id },
             relations: {
                 items: { sku: { product: true } },
+                installments: true
             },
         })
         if (!order)

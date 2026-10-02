@@ -398,6 +398,8 @@ export class ProductService {
           price: true,
           discountedPrice: true,
           stock: true,
+          condition: true,
+          battery: true,
           variantValues: {
             id: true,
             variant: { id: true, name: true, value: true },

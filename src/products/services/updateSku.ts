@@ -13,7 +13,8 @@ import { variantKey } from './variantKey';
  * Precio sale de la combinación o del producto, como en el alta. Lo que no
  * viene en ninguno de los dos queda como estaba: el stock (pisarlo con 0 por
  * no mandarlo vaciaría el depósito), el código (es el de barras, no se
- * regenera) y el descuento (`null` lo borra).
+ * regenera) y el descuento (`null` lo borra). Condición y batería siguen la
+ * misma regla que el descuento.
  *
  * `sku.variantValues` tiene que venir cargado con su `variant`.
  */
@@ -49,6 +50,19 @@ export async function updateSku(
     throw new ConflictException(`El código ${code} ya está en uso`);
   }
 
+  const condition =
+    combination.condition !== undefined
+      ? combination.condition
+      : body.condition !== undefined
+        ? body.condition
+        : sku.condition;
+  const battery =
+    combination.battery !== undefined
+      ? combination.battery
+      : body.battery !== undefined
+        ? body.battery
+        : sku.battery;
+
   await services.skuService.update(
     sku.id,
     {
@@ -56,6 +70,8 @@ export async function updateSku(
       price,
       discountedPrice,
       stock: combination.stock ?? body.stock ?? sku.stock,
+      condition: condition ?? null,
+      battery: battery ?? null,
     },
     manager,
   );

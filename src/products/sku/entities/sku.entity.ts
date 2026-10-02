@@ -14,6 +14,12 @@ import {
 import { BaseEntity } from '../../../common/entities/base.entity';
 import { OrderItem } from 'src/orderItem/entities/order-item.entity';
 
+/** Estado físico de la unidad. */
+export enum ProductCondition {
+  NUEVO = 'nuevo',
+  USADO = 'usado',
+}
+
 /**
  * Unidad vendible. Es la entidad que viaja en la orden: contra el SKU se
  * valida stock, se congela el precio y se resuelve qué combinación de
@@ -66,6 +72,19 @@ export class Sku extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   stock!: number;
 
+  /** Nuevo / usado. `null` = no aplica o no se cargó. */
+  @Column({
+    type: 'enum',
+    enum: ProductCondition,
+    enumName: 'sku_condition',
+    nullable: true,
+  })
+  condition!: ProductCondition | null;
+
+  /** Salud de la batería en % (0-100). `null` = no aplica o no se cargó. */
+  @Column({ type: 'smallint', nullable: true })
+  battery!: number | null;
+
   /** Combinación de variantes que identifica a este SKU (Talle: M + Color: Rojo). */
   @OneToMany(() => SkuVariantValue, (svv) => svv.sku, { cascade: ['insert'] })
   variantValues!: SkuVariantValue[];
@@ -84,5 +103,5 @@ export class Sku extends BaseEntity {
   partOf!: ProductComponent[];
 
   @OneToMany(() => OrderItem, (item) => item.sku)
-  items!: OrderItem[]
+  items!: OrderItem[];
 }

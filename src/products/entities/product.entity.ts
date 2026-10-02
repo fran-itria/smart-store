@@ -1,4 +1,11 @@
-import { Column, Entity, Index, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Sku } from '../sku/entities/sku.entity';
 import { ProductImage } from '../product-image/entities/product-image.entity';

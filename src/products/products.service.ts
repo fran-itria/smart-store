@@ -32,6 +32,8 @@ import {
   assertSkusAreFree,
   updateSku,
   variantKey,
+  skuKey,
+  resolveSkuState,
 } from './services';
 
 @Injectable()
@@ -45,7 +47,7 @@ export class ProductService {
     private readonly productImageService: ProductImageService,
     private readonly productComponentService: ProductComponentService,
     private readonly dataSource: DataSource,
-  ) {}
+  ) { }
 
   /** Los services que las funciones de `./services` necesitan para escribir. */
   private get writeServices(): ProductWriteServices {
@@ -71,7 +73,7 @@ export class ProductService {
     // PASO 0
     const type = resolveType(body);
     assertPriceIsValid(body.price, body.discountedPrice, body.name);
-    if (body.variants?.length) assertCombinationsAreValid(body.variants);
+    if (body.variants?.length) assertCombinationsAreValid(body.variants, body);
     if (type === ProductType.BUNDLE) assertBundleIsValid(body);
 
     const productId = await this.dataSource.transaction(async (manager) => {
@@ -147,7 +149,7 @@ export class ProductService {
       body.discountedPrice ?? undefined,
       body.name,
     );
-    if (body.variants?.length) assertCombinationsAreValid(body.variants);
+    if (body.variants?.length) assertCombinationsAreValid(body.variants, body);
     if (type === ProductType.BUNDLE) assertBundleIsValid(body);
 
     await this.dataSource.transaction(async (manager) => {
@@ -169,7 +171,7 @@ export class ProductService {
         .variants?.length
         ? body.variants
         : [undefined];
-      const matches = this.matchSkus(combinations, existing);
+      const matches = this.matchSkus(combinations, existing, body);
       const kept = new Set(matches.map((match) => match.sku?.id));
       const removed = existing.filter((sku) => !kept.has(sku.id));
 
@@ -257,10 +259,15 @@ export class ProductService {
    * PASO 1 del update: a qué SKU existente corresponde cada combinación
    * (`sku` vacío = hay que crearlo). Un producto simple es una única
    * "combinación" `undefined`, que empareja con el SKU sin opciones.
+   *
+   * Orden de búsqueda: `skuId`, después opciones + estado exactos, y por
+   * último sólo opciones. El último paso es el que permite editarle la
+   * batería o la condición a un SKU sin que se dé de baja y se cree otro.
    */
   private matchSkus(
     combinations: (UpdateVariantCombinationDto | undefined)[],
     existing: Sku[],
+    body: UpdateProductDto,
   ): { combination?: UpdateVariantCombinationDto; sku?: Sku }[] {
     const free = new Map(existing.map((sku) => [sku.id, sku]));
 
@@ -278,15 +285,37 @@ export class ProductService {
       return sku;
     });
 
+    const optionsOf = (sku: Sku) =>
+      sku.variantValues.map((value) => value.variant);
+
+    // Opciones + estado exactos: el SKU no cambió
+    const exact = combinations.map((combination, index) => {
+      if (byId[index]) return byId[index];
+      const state = resolveSkuState(combination ?? {}, body);
+      const key = skuKey(
+        combination?.variant ?? [],
+        state.condition,
+        state.battery,
+      );
+      const sku = [...free.values()].find(
+        (candidate) =>
+          skuKey(
+            optionsOf(candidate),
+            candidate.condition,
+            candidate.battery,
+          ) === key,
+      );
+      if (sku) free.delete(sku.id);
+      return sku;
+    });
+
+    // Sólo opciones: es el mismo SKU con otro estado
     return combinations.map((combination, index) => {
-      let sku = byId[index];
+      let sku = exact[index];
       if (!sku) {
         const key = variantKey(combination?.variant ?? []);
         sku = [...free.values()].find(
-          (candidate) =>
-            variantKey(
-              candidate.variantValues.map((value) => value.variant),
-            ) === key,
+          (candidate) => variantKey(optionsOf(candidate)) === key,
         );
         if (sku) free.delete(sku.id);
       }
@@ -322,44 +351,6 @@ export class ProductService {
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        type: true,
-        isPublished: true,
-        categories: { id: true, name: true },
-        images: { id: true, url: true, position: true },
-        description: true,
-        skus: {
-          id: true,
-          code: true,
-          price: true,
-          discountedPrice: true,
-          stock: true,
-          variantValues: {
-            id: true,
-            variant: { id: true, name: true, value: true },
-          },
-          components: {
-            id: true,
-            componentSku: {
-              id: true,
-              product: {
-                id: true,
-                name: true,
-              },
-              variantValues: {
-                id: true,
-                variant: {
-                  id: true,
-                  name: true,
-                  value: true,
-                },
-              },
-            },
-          },
-        },
-      },
       relations: {
         categories: true,
         images: true,

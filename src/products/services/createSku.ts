@@ -5,11 +5,12 @@ import { SkuService } from '../sku/sku.service';
 import { ProductDto, VariantCombinationDto } from '../dto/product.dto';
 import { assertPriceIsValid } from './assertPriceIsValid';
 import { buildCode } from './buildCode';
+import { resolveSkuState, skuStateCodeParts } from './skuKey';
 
 /**
  * Crea el SKU de una combinación. Precio y stock salen de la combinación y,
  * si no los trae, del producto: el default cubre el caso común de "todas las
- * variantes valen lo mismo".
+ * variantes valen lo mismo". Igual con condición y batería.
  */
 export async function createSku(
   product: Product,
@@ -24,12 +25,16 @@ export async function createSku(
 
   assertPriceIsValid(price, discountedPrice, values.join('/') || product.name);
 
+  const state = resolveSkuState(combination, body);
+
   return skuService.create(
     {
       productId: product.id,
       code: await buildCode(
         product,
-        values,
+        // El estado va en el código: dos "Negro" usados con distinta batería
+        // necesitan códigos distintos
+        [...values, ...skuStateCodeParts(state)],
         combination.code,
         manager,
         skuService,
@@ -37,6 +42,8 @@ export async function createSku(
       price,
       discountedPrice,
       stock: combination.stock ?? body.stock ?? 0,
+      condition: state.condition,
+      battery: state.battery,
     },
     manager,
   );

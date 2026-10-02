@@ -1,13 +1,16 @@
 import { Type } from 'class-transformer';
 import {
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
   IsString,
   IsUUID,
   Length,
+  Max,
   Min,
 } from 'class-validator';
+import { ProductCondition } from '../entities/sku.entity';
 
 /**
  * Alta de un SKU: la unidad vendible.
@@ -43,4 +46,16 @@ export class SkuDto {
   @IsInt()
   @Min(0)
   stock?: number;
+
+  /** Nuevo / usado. `null` = sin especificar. */
+  @IsOptional()
+  @IsEnum(ProductCondition)
+  condition?: ProductCondition | null;
+
+  /** Batería en % (0-100). `null` = sin especificar. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  battery?: number | null;
 }

@@ -1,23 +1,27 @@
 import { BadRequestException } from '@nestjs/common';
-import { VariantCombinationDto } from '../dto/product.dto';
-import { variantKey } from './variantKey';
+import { ProductDto, VariantCombinationDto } from '../dto/product.dto';
+import { resolveSkuState, skuKey } from './skuKey';
 
 /**
  * Tres reglas que mantienen el catálogo usable desde el front:
  *
  *  - una combinación no repite dimensión (Talle M y Talle L en el mismo SKU)
- *  - no hay dos SKUs con la misma combinación (¿cuál se vende?)
+ *  - no hay dos SKUs con la misma combinación y el mismo estado (condición +
+ *    batería): ¿cuál se vende? Si difieren en el estado, son unidades
+ *    distintas y conviven
  *  - todas las combinaciones usan las mismas dimensiones: si la remera se
  *    elige por talle y color, todas sus variantes necesitan ambos, o el
  *    selector del front queda con huecos
  */
 export function assertCombinationsAreValid(
   combinations: VariantCombinationDto[],
+  defaults: Pick<ProductDto, 'condition' | 'battery'> = {},
 ) {
   const seen = new Set<string>();
   let dimensions: string | null = null;
 
-  for (const { variant } of combinations) {
+  for (const combination of combinations) {
+    const { variant } = combination;
     const names = variant.map((option) => option.name.trim().toLowerCase());
 
     if (new Set(names).size !== names.length) {
@@ -34,9 +38,12 @@ export function assertCombinationsAreValid(
       );
     }
 
-    const key = variantKey(variant);
+    const state = resolveSkuState(combination, defaults);
+    const key = skuKey(variant, state.condition, state.battery);
     if (seen.has(key)) {
-      throw new BadRequestException(`Combinación duplicada: ${key}`);
+      throw new BadRequestException(
+        `Combinación duplicada: ${key}. Si es otra unidad, cambiale la condición o la batería; si es la misma, sumale stock`,
+      );
     }
     seen.add(key);
   }

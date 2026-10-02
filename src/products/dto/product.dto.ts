@@ -12,11 +12,12 @@ import {
   IsUrl,
   IsUUID,
   Length,
+  Max,
   MaxLength,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { ProductType } from '../entities';
+import { ProductCondition, ProductType } from '../entities';
 import { BundleComponentDto } from '../product-component/dto/product-component.dto';
 
 /** Una opción suelta dentro de una combinación: "Talle" / "M". */
@@ -58,6 +59,22 @@ export class VariantCombinationDto {
   @IsString()
   @Length(1, 64)
   code?: string;
+
+  /**
+   * Estado de esta unidad. Junto con `battery` forma parte de la identidad
+   * del SKU: dos "Negro / 128GB" pueden convivir si difieren en alguno.
+   * Si no va, se usa el del producto; `null` lo deja sin especificar.
+   */
+  @IsOptional()
+  @IsEnum(ProductCondition)
+  condition?: ProductCondition | null;
+
+  /** Batería en % (0-100). Mismas reglas que `condition`. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  battery?: number | null;
 
   /**
    * Sólo en combos: qué SKUs trae *esta* combinación, además de los comunes
@@ -143,4 +160,19 @@ export class ProductDto {
   @ValidateNested({ each: true })
   @Type(() => BundleComponentDto)
   components?: BundleComponentDto[];
+
+  /**
+   * Estado del SKU de un producto simple, o el default de las combinaciones
+   * que no traen el suyo. `null` = sin especificar.
+   */
+  @IsOptional()
+  @IsEnum(ProductCondition)
+  condition?: ProductCondition | null;
+
+  /** Batería en % (0-100). Mismas reglas que `condition`. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100)
+  battery?: number | null;
 }

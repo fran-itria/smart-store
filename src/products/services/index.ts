@@ -13,6 +13,7 @@ export {
   type ProductWriteServices,
 } from './createSkuForCombination';
 export { variantKey } from './variantKey';
+export { skuKey, resolveSkuState, skuStateCodeParts } from './skuKey';
 export { resolveVariants } from './resolveVariants';
 export { assertSkusAreFree } from './assertSkusAreFree';
 export { updateSku } from './updateSku';

@@ -41,7 +41,12 @@ export class SkuService {
   /** Pisa los campos de un SKU existente. */
   async update(
     id: string,
-    changes: Partial<Pick<Sku, 'code' | 'price' | 'discountedPrice' | 'stock'>>,
+    changes: Partial<
+      Pick<
+        Sku,
+        'code' | 'price' | 'discountedPrice' | 'stock' | 'condition' | 'battery'
+      >
+    >,
     manager?: EntityManager,
   ): Promise<void> {
     await this.repo(manager).update(id, changes);

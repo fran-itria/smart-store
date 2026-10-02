@@ -19,3 +19,9 @@ export enum Status {
     PARTIAL = "parcial",
     PAID = "pagada"
 }
+
+export enum Status_order {
+    PENDING = "pendiente",
+    COURSE = "en curso",
+    PAID = "pagada"
+}

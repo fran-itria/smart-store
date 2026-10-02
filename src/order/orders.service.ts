@@ -80,37 +80,6 @@ export class OrderService {
                 items: { sku: { product: true } },
                 installments: true
             },
-            select: {
-                id: true,
-                orderNumber: true,
-                client_name: true,
-                client_surname: true,
-                currency: true,
-                delivered_method: true,
-                mail: true,
-                phone: true,
-                total_amount: true,
-                createdAt: true,
-                items: {
-                    id: true,
-                    discounted_price: true,
-                    quantity: true,
-                    unit_price: true,
-                    sku: {
-                        id: true,
-                        images: true,
-                        partOf: true,
-                        price: true,
-                        variantValues: true,
-                        discountedPrice: true,
-                        product: {
-                            id: true,
-                            name: true,
-                            images: true
-                        }
-                    }
-                }
-            },
             order: {
                 orderNumber: "DESC",
                 installments: { installment_number: "ASC" }

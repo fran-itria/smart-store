@@ -10,7 +10,10 @@ export class Installment extends BaseEntity {
     @Column({ type: "uuid" })
     order_id!: string
 
-    @ManyToOne(() => Orders, (order) => order.installments, { nullable: false })
+    @ManyToOne(() => Orders, (order) => order.installments, {
+        nullable: false,
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: "order_id" })
     order!: Orders
 
